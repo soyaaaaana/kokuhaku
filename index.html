@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://res.cloudinary.com/finnhvman/raw/upload/matter/matter-0.2.2.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
+function result_text(result) {
+  return (typeof result === "string" ? result.toLowerCase() === "true" : result) ? "今日は告白してみては？！？！？！" : "今日は告白する日じゃないかもしれない。";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const element = document.getElementById("roulette");
+  const result_element = document.getElementById("result");
+  const last_execute = localStorage.getItem("last_execute");
+  if (last_execute !== new Date().toDateString()) {
+    element.removeAttribute("disabled");
+    element.addEventListener("click", async () => {
+      element.setAttribute("disabled", "");
+      for (let i = 5; i > 0; i--) {
+        result_element.textContent = `結果発表まで... ${i}秒`;
+        if (i <= 3) {
+          result_element.classList.add("text-danger");
+        }
+        else {
+          result_element.classList.remove("text-danger");
+        }
+        await sleep(1000);
+      }
+      result_element.classList.remove("text-danger");
+      const result = Math.floor(Math.random() * 365) + 1 === 1;
+      localStorage.setItem("last_execute_result", result);
+      result_element.textContent = result_text(result)
+      localStorage.setItem("last_execute", new Date().toDateString());
+    });
+  }
+  else {
+    if (last_execute != null) {
+      result_element.textContent = result_text(localStorage.getItem("last_execute_result"));
+    }
+  }
+});
+    </script>
+  </head>
+  <body class="m-3" data-bs-theme="dark">
+    <div class="text-center">
+      <h1>告白ルーレット</h1>
+      <button class="btn btn-primary" id="roulette" disabled>1日1回のルーレットを回す（アニメーションなんかありません）</button>
+      <p class="mt-1" id="result"></p>
+    </div>
+    <!-- リポジトリへのリンク（ページ下部） -->
+    <div class="position-absolute bottom-0 start-50 translate-middle">
+      <a class="" href="https://github.com/soyaaaaana/kokuhaku">リポジトリ</a>
+    </div>
+  </body>
+</html>
